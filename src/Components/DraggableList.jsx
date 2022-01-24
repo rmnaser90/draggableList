@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 
 const DraggableList = ({
@@ -14,15 +14,15 @@ const DraggableList = ({
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
   const [yPosition, setYPosition] = useState(0);
-  const [startPosition, setStartPosition] = useState(0);
-  const [prevPosition, setPrevPosition] = useState(0);
+  const listRef= useRef(null)
   width = width ? width : "100%";
   height = height ? height : "100%";
 
   const startDragging = (event, i) => {
+    const offset = listRef.current.offsetTop
     setisDragging(true);
     setSelectedIndex(i);
-    setStartPosition(event.pageY);
+    setYPosition(event.pageY - offset)
   };
   const stopDragging = (event) => {
     if (isDragging && targetIndex !== null) {
@@ -46,10 +46,9 @@ const DraggableList = ({
     }
   };
   const startMoving = (event) => {
-    const containerTop = event.target;
+    const offset = listRef.current.offsetTop
     if (isDragging) {
-        console.log(event);
-      setYPosition(startPosition +event.nativeEvent.pageY);
+      setYPosition(event.pageY-offset +20);
 
     }
   };
@@ -67,6 +66,7 @@ const DraggableList = ({
         alignItems: 'center',
         justifyItems: 'center',
       }}
+      ref={listRef}
       className="draggableListContainer"
       onMouseMove={startMoving}
       onMouseUp={stopDragging}
@@ -102,6 +102,8 @@ const styles = {
     position: "absolute",
     zIndex: "999",
     width: "100%",
+    height:'50px',
+    overflow:'hidden'
   },
   target: {
     borderTop: "2px solid black",
