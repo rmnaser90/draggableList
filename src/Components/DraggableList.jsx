@@ -14,15 +14,15 @@ const DraggableList = ({
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
   const [yPosition, setYPosition] = useState(0);
-  const listRef= useRef(null)
+  const listRef = useRef(null);
   width = width ? width : "100%";
   height = height ? height : "100%";
 
   const startDragging = (event, i) => {
-    const offset = listRef.current.offsetTop
+    const offset = listRef.current.offsetTop;
     setisDragging(true);
     setSelectedIndex(i);
-    setYPosition(event.pageY - offset)
+    setYPosition(event.pageY - offset);
   };
   const stopDragging = (event) => {
     if (isDragging && targetIndex !== null) {
@@ -46,10 +46,9 @@ const DraggableList = ({
     }
   };
   const startMoving = (event) => {
-    const offset = listRef.current.offsetTop
+    const offset = listRef.current.offsetTop;
     if (isDragging) {
-      setYPosition(event.pageY-offset +20);
-
+      setYPosition(event.pageY - offset + 20);
     }
   };
 
@@ -61,10 +60,10 @@ const DraggableList = ({
         position: "relative",
         transition: "0.4s",
         ...containerStyle,
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        alignItems: 'center',
-        justifyItems: 'center',
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        alignItems: "center",
+        justifyItems: "center",
       }}
       ref={listRef}
       className="draggableListContainer"
@@ -80,9 +79,10 @@ const DraggableList = ({
           onMouseEnter={(event) => selectingTarget(event, i)}
           style={{
             userSelect: "none",
-            width:'90%',
-            height:'90%',
-            backgroundColor:'grey',
+           
+            width: "90%",
+            height: "90%",
+            backgroundColor: "grey",
             ...returnStyle(isDragging, selectedIndex === i, yPosition),
             ...returnTargetStyle(
               isDragging && targetIndex === i && selectedIndex !== i
@@ -93,19 +93,22 @@ const DraggableList = ({
           <ItemTemplate item={item} />
         </div>
       ))}
+      <div style={{ width: "100%", height: "200px" }}></div>
     </div>
   );
 };
 
 const styles = {
   selected: {
+      width: "80%",
+      height: "50px",
     position: "absolute",
     zIndex: "999",
-    width: "100%",
-    height:'50px',
-    overflow:'hidden'
+    overflow: "hidden",
   },
   target: {
+    transition: "0.3s",
+    marginTop: "10px",
     borderTop: "2px solid black",
   },
 };
@@ -120,7 +123,7 @@ const returnTargetStyle = function (isTarget) {
   if (isTarget) {
     return styles.target;
   } else {
-    return { borderTop: "0px solid black" };
+    return { borderTop: "0px solid black", marginTop: "0px" };
   }
 };
 

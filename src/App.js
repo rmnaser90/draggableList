@@ -20,16 +20,20 @@ function App() {
   const [list, setList] = useState(testlist);
   const listContainer = useRef(null);
 
-
   return (
     <div className="App">
-      <div style={{width:'100%', height:'300px',backgroundColor:'red'}}>
-
-      </div>
+      <div
+        style={{ width: "100%", height: "300px", backgroundColor: "red" }}
+      ></div>
 
       <div ref={listContainer} className="listContainer">
-        <DraggableList list={list} containerRef={listContainer} onChange={(newList)=>setList(newList)} ItemTemplate={DraggableItem} width='500px'/>
-
+        <DraggableList
+          list={list}
+          containerRef={listContainer}
+          onChange={(newList) => setList(newList)}
+          ItemTemplate={DraggableItem}
+          width="500px"
+        />
       </div>
     </div>
   );
