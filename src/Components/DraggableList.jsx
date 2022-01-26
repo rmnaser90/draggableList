@@ -22,8 +22,8 @@ const DraggableList = ({
 
   const startDragging = (event, i) => {
     const offset = listRef.current.offsetTop;
-    setisItemSelected(true)
-    setStartPosition(event.pageY - offset)
+    setisItemSelected(true);
+    setStartPosition(event.pageY - offset);
     setSelectedIndex(i);
     setYPosition(event.pageY - offset);
   };
@@ -31,11 +31,10 @@ const DraggableList = ({
   const checkDragging = function (event) {
     const offset = listRef.current.offsetTop;
     setYPosition(event.pageY - offset);
-    if (Math.abs(yPosition - startPosition) > 20 && isItemSelected) {
-      setisDragging(true)
+    if (Math.abs(yPosition - startPosition) > 60 && isItemSelected) {
+      setisDragging(true);
     }
-  }
-
+  };
 
   const stopDragging = (event) => {
     if (isDragging && targetIndex !== null) {
@@ -51,8 +50,8 @@ const DraggableList = ({
     setisDragging(false);
     setSelectedIndex(null);
     setTargetIndex(null);
-    setStartPosition(null)
-    setisItemSelected(null)
+    setStartPosition(null);
+    setisItemSelected(null);
   };
 
   const selectingTarget = (event, i) => {
@@ -61,7 +60,7 @@ const DraggableList = ({
     }
   };
   const startMoving = (event) => {
-    checkDragging(event)
+    checkDragging(event);
     const offset = listRef.current.offsetTop;
     if (isDragging) {
       setYPosition(event.pageY - offset + 20);
@@ -73,7 +72,7 @@ const DraggableList = ({
       style={{
         width,
         height,
-        cursor: isDragging?"grabbing":"auto",
+        cursor: isDragging ? "grabbing" : "auto",
         position: "relative",
         transition: "0.4s",
         ...containerStyle,
@@ -95,10 +94,10 @@ const DraggableList = ({
           onMouseUp={stopDragging}
           onMouseEnter={(event) => selectingTarget(event, i)}
           style={{
-            userSelect: "none",
+            userSelect: isDragging ? "none" : "auto",
             width: "100%",
             height: "100%",
-            transition:"0.4s",
+            transition: "0.4s ease-out",
             transitionDuration: "0.4s",
             transitionProperty: "margin-top,height,width",
             ...returnStyle(isDragging, selectedIndex === i, yPosition),
@@ -125,12 +124,12 @@ const DraggableList = ({
 
 const styles = {
   selected: {
-    width: "80%",
-    height: "50px",
+    // width: "90%",
+    // height: "70px",
     position: "absolute",
     zIndex: "999",
     overflow: "hidden",
-    opacity:'0.6'
+    opacity: "0.6",
   },
   target: {
     marginTop: "50px",
