@@ -14,16 +14,29 @@ const DraggableList = ({
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
   const [yPosition, setYPosition] = useState(0);
+  const [startPosition, setStartPosition] = useState(null);
+  const [isItemSelected, setisItemSelected] = useState(false);
   const listRef = useRef(null);
   width = width ? width : "100%";
   height = height ? height : "100%";
 
   const startDragging = (event, i) => {
     const offset = listRef.current.offsetTop;
-    setisDragging(true);
+    setisItemSelected(true)
+    setStartPosition(event.pageY - offset)
     setSelectedIndex(i);
     setYPosition(event.pageY - offset);
   };
+
+  const checkDragging = function (event) {
+    const offset = listRef.current.offsetTop;
+    setYPosition(event.pageY - offset);
+    if (Math.abs(yPosition - startPosition) > 20 && isItemSelected) {
+      setisDragging(true)
+    }
+  }
+
+
   const stopDragging = (event) => {
     if (isDragging && targetIndex !== null) {
       const newList = [...list];
@@ -38,6 +51,8 @@ const DraggableList = ({
     setisDragging(false);
     setSelectedIndex(null);
     setTargetIndex(null);
+    setStartPosition(null)
+    setisItemSelected(null)
   };
 
   const selectingTarget = (event, i) => {
@@ -46,6 +61,7 @@ const DraggableList = ({
     }
   };
   const startMoving = (event) => {
+    checkDragging(event)
     const offset = listRef.current.offsetTop;
     if (isDragging) {
       setYPosition(event.pageY - offset + 20);
@@ -57,6 +73,7 @@ const DraggableList = ({
       style={{
         width,
         height,
+        cursor: isDragging?"grabbing":"auto",
         position: "relative",
         transition: "0.4s",
         ...containerStyle,
@@ -79,10 +96,11 @@ const DraggableList = ({
           onMouseEnter={(event) => selectingTarget(event, i)}
           style={{
             userSelect: "none",
-           
-            width: "90%",
-            height: "90%",
-            backgroundColor: "grey",
+            width: "100%",
+            height: "100%",
+            transition:"0.4s",
+            transitionDuration: "0.4s",
+            transitionProperty: "margin-top,height,width",
             ...returnStyle(isDragging, selectedIndex === i, yPosition),
             ...returnTargetStyle(
               isDragging && targetIndex === i && selectedIndex !== i
@@ -93,22 +111,29 @@ const DraggableList = ({
           <ItemTemplate item={item} />
         </div>
       ))}
-      <div style={{ width: "100%", height: "200px" }}></div>
+      <div
+        style={{
+          width: "90%",
+          height: "200px",
+          ...returnTargetStyle(isDragging && targetIndex === list.length),
+        }}
+        onMouseEnter={(event) => selectingTarget(event, list.length)}
+      ></div>
     </div>
   );
 };
 
 const styles = {
   selected: {
-      width: "80%",
-      height: "50px",
+    width: "80%",
+    height: "50px",
     position: "absolute",
     zIndex: "999",
     overflow: "hidden",
+    opacity:'0.6'
   },
   target: {
-    transition: "0.3s",
-    marginTop: "10px",
+    marginTop: "50px",
     borderTop: "2px solid black",
   },
 };
@@ -123,7 +148,10 @@ const returnTargetStyle = function (isTarget) {
   if (isTarget) {
     return styles.target;
   } else {
-    return { borderTop: "0px solid black", marginTop: "0px" };
+    return {
+      borderTop: "0px solid black",
+      marginTop: "0px",
+    };
   }
 };
 
